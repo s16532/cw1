@@ -11,7 +11,7 @@ namespace cw1
     {
         static async Task Main(string[] args)
         {
-            Console.WriteLine("Gas the jews !!!");
+            Console.WriteLine("CoronaVirus");
 
             var emails = await GetEmails(args[0]);
 
