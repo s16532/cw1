@@ -11,10 +11,18 @@ namespace cw1
     {
         static async Task Main(string[] args)
         {
-            Console.WriteLine("Gas the jews !!!");
+
+            //Console.WriteLine("Coronavirus will kill you ");
+
+            if (args.Length == 0)
+            {
+                throw new ArgumentNullException("No arguments provided");
+            }
+
+            bool isUrl = Uri.IsWellFormedUriString(args[0], UriKind.RelativeOrAbsolute);
 
             var emails = await GetEmails(args[0]);
-
+            
             foreach(var a in args)
             {
                 Console.WriteLine(a);
@@ -28,25 +36,31 @@ namespace cw1
 
         static async Task<IList<string>> GetEmails(string url)
         {
-            var httpclient = new HttpClient();
-            var listOfEmails = new List<string>();
-
-            var response = await httpclient.GetAsync(url);
-
-
-            Regex emailRegex = new Regex(@"\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*",
-            RegexOptions.IgnoreCase);
-            //find items that matches with our pattern
-            MatchCollection emailMatches = emailRegex.Matches(response.Content.ReadAsStringAsync().Result);
-
-            StringBuilder sb = new StringBuilder();
-
-            foreach (Match emailMatch in emailMatches)
+            try
             {
-                listOfEmails.Add(emailMatch.ToString());
-            }
+                var httpclient = new HttpClient();
+                var listOfEmails = new List<string>();
 
-            return listOfEmails;
+                var response = await httpclient.GetAsync(url);
+
+
+                Regex emailRegex = new Regex(@"\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*",
+                RegexOptions.IgnoreCase);
+                //find items that matches with our pattern
+                MatchCollection emailMatches = emailRegex.Matches(response.Content.ReadAsStringAsync().Result);
+
+                StringBuilder sb = new StringBuilder();
+
+                foreach (Match emailMatch in emailMatches)
+                {
+                    listOfEmails.Add(emailMatch.ToString());
+                }
+
+                return listOfEmails;
+            } catch
+            {
+                throw new ArgumentException("Argument is not valid url aress");
+            }
         }
     }
 }
